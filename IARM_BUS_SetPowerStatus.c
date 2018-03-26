@@ -27,6 +27,7 @@ const char *pPowerStandby = "STANDBY";
 const char *pPowerLigtSleep = "LIGHTSLEEP";
 const char *pPowerDeepSleep = "DEEPSLEEP";
 
+void setDeepSleepTimer(unsigned int seconds);
 
 void usage ()
 {
@@ -35,6 +36,7 @@ void usage ()
     printf ("\t\t STANDBY    -> Set to Standby Mode\n");
     printf ("\t\t LIGHTSLEEP -> Set to LIGHT Sleep Standby mode\n");
     printf ("\t\t DEEPSLEEP  -> Set to DEEP Sleep Standby mode\n");
+    printf ("\t\t DEEPSLEEP <Timeout value in seconds> -> Set to DEEP Sleep Standby mode with timeout specified\n");
     printf ("\t\t OFF        -> Set to OFF\n");
 }
 
@@ -46,6 +48,10 @@ void setPowerMode();
 int main(int argc, char *argv[])
 {
     IARM_Bus_PWRMgr_SetPowerState_Param_t param;
+    unsigned int timeout;
+
+    IARM_Bus_Init("iARMSetPower_tool");
+    IARM_Bus_Connect();
 
     param.newState = IARM_BUS_PWRMGR_POWERSTATE_ON;
 
@@ -72,6 +78,11 @@ int main(int argc, char *argv[])
     {
             param.newState = IARM_BUS_PWRMGR_POWERSTATE_STANDBY_DEEP_SLEEP;
             printf ("Deep Sleep Request...\n");
+            if (3 == argc)
+            {
+                timeout = atoi(argv[2]);
+                setDeepSleepTimer(timeout);
+            }
     }
     else if (strncasecmp(pPowerOFF, argv[1], strlen (pPowerOFF)) == 0)
     {
@@ -88,9 +99,6 @@ int main(int argc, char *argv[])
           (param.newState == IARM_BUS_PWRMGR_POWERSTATE_STANDBY_LIGHT_SLEEP) ||
           (param.newState == IARM_BUS_PWRMGR_POWERSTATE_STANDBY_DEEP_SLEEP))
     {
-        IARM_Bus_Init("iARMSetPower_tool");
-        IARM_Bus_Connect();
-
         /** Query current Power state  */
         if (IARM_RESULT_SUCCESS == IARM_Bus_Call(IARM_BUS_PWRMGR_NAME,
                             IARM_BUS_PWRMGR_API_SetPowerState,
@@ -103,8 +111,27 @@ int main(int argc, char *argv[])
         {
             printf ("SetPowerState :: Failed \n");
         }
-        IARM_Bus_Disconnect();
-        IARM_Bus_Term();
     }
+
+    IARM_Bus_Disconnect();
+    IARM_Bus_Term();
     return 0;
 }
+
+void setDeepSleepTimer(unsigned int seconds)
+{
+    IARM_Bus_PWRMgr_SetDeepSleepTimeOut_Param_t param;
+    param.timeout = seconds;
+    IARM_Result_t res = IARM_Bus_Call(IARM_BUS_PWRMGR_NAME, IARM_BUS_PWRMGR_API_SetDeepSleepTimeOut,
+                      (void *)&param, sizeof(param));
+    if(res == IARM_RESULT_SUCCESS)
+    {
+        printf ("SetDeepSleepTimeOut :: Success \n");
+    }
+    else
+    {
+        printf ("SetDeepSleepTimeOut :: Failed \n");
+    }
+    return;
+}
+
