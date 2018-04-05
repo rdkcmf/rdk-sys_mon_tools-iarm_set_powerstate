@@ -30,7 +30,7 @@ AM_CFLAGS = -I=$(IARM) -I=$(IARM_MGR)/../iarmmgrs-hal
 bin_PROGRAMS = SetPowerState
 
 SetPowerState_SOURCES=IARM_BUS_SetPowerStatus.c
-SetPowerState_LDADD = -ldirect -ldbus-1 -lstdc++ -lfusion -lIARMBus -lpthread
+SetPowerState_LDADD =  -ldbus-1 -lstdc++ -lIARMBus -lpthread
 
 ## IPK generation Support
 iarm_set_powerstate_IPK_OUTDIR = $(abs_top_builddir)/ipk
