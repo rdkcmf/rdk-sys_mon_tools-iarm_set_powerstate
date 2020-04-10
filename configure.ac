@@ -20,7 +20,7 @@ AC_PREREQ([2.68])
 AC_INIT([iarm_set_powerstate], [1.0], [praveenr@tataelxsi.co.in])
 AC_CONFIG_SRCDIR([IARM_BUS_SetPowerStatus.c])
 
-AC_CONFIG_MACRO_DIR([cfg])
+AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([cfg])
 AM_INIT_AUTOMAKE([foreign no-dist-gzip dist-bzip2 1.9])
 AC_CONFIG_HEADERS([cfg/config.h])
