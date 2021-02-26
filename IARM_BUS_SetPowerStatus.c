@@ -75,7 +75,8 @@ int main(int argc, char *argv[])
     }
     else if (strncasecmp(pPowerOFF, argv[1], strlen (pPowerOFF)) == 0)
     {
-            printf ("OFF Request...\t Not processed\n");
+            param.newState = IARM_BUS_PWRMGR_POWERSTATE_OFF;
+            printf ("OFF Request...\n");
     }
     else
     {
@@ -84,6 +85,7 @@ int main(int argc, char *argv[])
     
 
     if ((param.newState == IARM_BUS_PWRMGR_POWERSTATE_ON) || 
+          (param.newState == IARM_BUS_PWRMGR_POWERSTATE_OFF) ||
           (param.newState == IARM_BUS_PWRMGR_POWERSTATE_STANDBY) ||
           (param.newState == IARM_BUS_PWRMGR_POWERSTATE_STANDBY_LIGHT_SLEEP) ||
           (param.newState == IARM_BUS_PWRMGR_POWERSTATE_STANDBY_DEEP_SLEEP))
